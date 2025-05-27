@@ -5,7 +5,6 @@ source = actstream
 omit =
     *migrations*
 
-[report]
 ignore_errors = True
 exclude_lines =
     pragma: no cover
