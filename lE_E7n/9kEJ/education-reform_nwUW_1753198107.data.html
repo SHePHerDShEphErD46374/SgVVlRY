@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPulse - Education Reform Platform</title>
+    
+    <!-- Poppins Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #FF9933 0%, #FFFFFF 33%, #FFFFFF 66%, #138808 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* Header Navigation */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #0B3D91;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #0B3D91;
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #0B3D91;
+        }
+
+        /* Section Styling */
+        .section {
+            padding: 6rem 2rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #0B3D91;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding-top: 8rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: #0B3D91;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Form Styling */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group select,
+        .form-group textarea,
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0B3D91;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: #0B3D91;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #083071;
+        }
+
+        /* Dashboard Section */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0B3D91;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Table Styling */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table th {
+            background: #0B3D91;
+            color: white;
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Inspiration Section */
+        .inspiration-list {
+            list-style: none;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .inspiration-list li {
+            background: #FFB703;
+            margin: 1rem 0;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 3px 10px rgba(255, 183, 3, 0.3);
+        }
+
+        /* About Section */
+        .about-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            text-align: justify;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0B3D91;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-icons {
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: white;
+                flex-direction: column;
+                justify-content: start;
+                align-items: center;
+                padding-top: 2rem;
+                transition: left 0.3s ease;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 4rem 1rem 2rem;
+            }
+
+            .section-card {
+                padding: 2rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-table {
+                font-size: 0.9rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .data-table {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">EduPulse</div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#submit">Submit Input</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#inspiration">Inspiration</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="section hero">
+        <div class="section-card">
+            <h1>Welcome to EduPulse</h1>
+            <p class="hero-description">
+                EduPulse is a platform where parents, students, teachers, and reformers can share their education-related concerns and innovative suggestions. We collect and organize inputs by city, district, and state to help government agencies and NGOs drive impactful change.
+            </p>
+        </div>
+    </section>
+
+    <!-- Submit Input Section -->
+    <section id="submit" class="section">
+        <div class="section-card">
+            <h2 class="section-title">Submit Your Input</h2>
+            <p class="section-subtitle">Share your education-related concerns, suggestions, or success stories to help drive meaningful change.</p>
+            
+            <form class="form-container" id="inputForm">
+                <div class="form-group">
+                    <label for="role">Your Role:</label>
+                    <select id="role" name="role" required>
+                        <option value="">Select your role</option>
+                        <option value="student">Student</option>
+                        <option value="parent">Parent</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="reformer">Reformer</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputType">Input Type:</label>
+                    <select id="inputType" name="inputType" required>
+                        <option value="">Select input type</option>
+                        <option value="problem">Problem</option>
+                        <option value="suggestion">Suggestion</option>
+                        <option value="success">Success Story</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select category</option>
+                        <option value="curriculum">Curriculum</option>
+                        <option value="infrastructure">Infrastructure</option>
+                        <option value="exams">Exams</option>
+                        <option value="teacher-quality">Teacher Quality</option>
+                        <option value="technology">Technology</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <select id="state" name="state" required>
+                        <option value="">Select state</option>
+                        <option value="maharashtra">Maharashtra</option>
+                        <option value="kerala">Kerala</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="karnataka">Karnataka</option>
+                        <option value="tamil-nadu">Tamil Nadu</option>
+                        <option value="west-bengal">West Bengal</option>
+                        <option value="rajasthan">Rajasthan</option>
+                        <option value="gujarat">Gujarat</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="district">District:</label>
+                    <select id="district" name="district" required>
+                        <option value="">Select district</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <select id="city" name="city" required>
+                        <option value="">Select city</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" placeholder="Please describe your input in detail..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="file">Attach File (Optional):</label>
+                    <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png">
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Input</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section">
+        <div class="section-card">
+            <h2 class="section-title">Dashboard – Inputs Overview</h2>
+            
+            <div class="dashboard-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">Inputs by State</h3>
+                    <canvas id="stateChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Input Type Distribution</h3>
+                    <canvas id="typeChart"></canvas>
+                </div>
+            </div>
+
+            <h3 class="chart-title">Recent Submissions</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Student</td>
+                        <td>Exams</td>
+                        <td>Pune, Maharashtra</td>
+                        <td>Exam schedule too tight, need better spacing.</td>
+                    </tr>
+                    <tr>
+                        <td>Teacher</td>
+                        <td>Curriculum</td>
+                        <td>Kochi, Kerala</td>
+                        <td>Need more focus on soft skills.</td>
+                    </tr>
+                    <tr>
+                        <td>Parent</td>
+                        <td>Infrastructure</td>
+                        <td>Bangalore, Karnataka</td>
+                        <td>Lack of basic facilities in rural schools.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Inspiration Section -->
+    <section id="inspiration" class="section">
+        <div class="section-card">
+            <h2 class="section-title">What We Can Learn From Nordic Education Models</h2>
+            <ul class="inspiration-list">
+                <li>Student-centered learning</li>
+                <li>Low-stress assessment</li>
+                <li>Holistic development</li>
+                <li>Teacher empowerment</li>
+                <li>Integration of play and creativity</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="section">
+        <div class="section-card">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-content">
+                <p>
+                    EduPulse is a citizen-led initiative that believes education reform must begin with listening — to parents, students, teachers, and changemakers on the ground. Founded by global professionals with roots in the Indian education system and exposure to progressive models in countries like Sweden, we aim to collect, organize, and amplify grassroots concerns and actionable ideas for improving education in India.
+                </p>
+                <br>
+                <p>
+                    Our thought is to make public education more equitable, skill-based, and child-centric — by crowdsourcing insights and solutions that government agencies, NGOs, and private institutions can use to create meaningful change.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="footer-content">
+            <p>Contact: info@edupulse.org</p>
+            <div class="social-icons">
+                <a href="#">LinkedIn</a>
+                <a href="#">Twitter</a>
+                <a href="#">Facebook</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const navMenu = document.getElementById('nav-menu');
+
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Location dropdown dependency
+        const locationData = {
+            'maharashtra': {
+                'mumbai': ['Mumbai City', 'Andheri', 'Bandra', 'Thane'],
+                'pune': ['Pune City', 'Pimpri-Chinchwad', 'Nashik', 'Aurangabad'],
+                'nagpur': ['Nagpur City', 'Wardha', 'Chandrapur', 'Gadchiroli']
+            },
+            'kerala': {
+                'ernakulam': ['Kochi', 'Aluva', 'Perumbavoor', 'Kothamangalam'],
+                'thiruvananthapuram': ['Trivandrum', 'Neyyattinkara', 'Varkala', 'Attingal'],
+                'kozhikode': ['Calicut', 'Vadakara', 'Koyilandy', 'Feroke']
+            },
+            'delhi': {
+                'central-delhi': ['Connaught Place', 'Karol Bagh', 'Paharganj', 'Daryaganj'],
+                'south-delhi': ['Greater Kailash', 'Lajpat Nagar', 'Defence Colony', 'Hauz Khas'],
+                'north-delhi': ['Civil Lines', 'Kamla Nagar', 'Majnu Ka Tilla', 'Timarpur']
+            },
+            'karnataka': {
+                'bangalore-urban': ['Bangalore', 'Electronic City', 'Whitefield', 'Koramangala'],
+                'mysore': ['Mysore City', 'Nanjangud', 'T. Narasipur', 'Hunsur'],
+                'mangalore': ['Mangalore City', 'Udupi', 'Kundapura', 'Karkala']
+            },
+            'tamil-nadu': {
+                'chennai': ['Chennai City', 'Tambaram', 'Avadi', 'Ambattur'],
+                'coimbatore': ['Coimbatore City', 'Tirupur', 'Pollachi', 'Mettupalayam'],
+                'madurai': ['Madurai City', 'Dindigul', 'Theni', 'Sivaganga']
+            }
+        };
+
+        const stateSelect = document.getElementById('state');
+        const districtSelect = document.getElementById('district');
+        const citySelect = document.getElementById('city');
+
+        stateSelect.addEventListener('change', function() {
+            const selectedState = this.value;
+            districtSelect.innerHTML = '<option value="">Select district</option>';
+            citySelect.innerHTML = '<option value="">Select city</option>';
+            
+            if (selectedState && locationData[selectedState]) {
+                Object.keys(locationData[selectedState]).forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district.charAt(0).toUpperCase() + district.slice(1).replace('-', ' ');
+                    districtSelect.appendChild(option);
+                });
+            }
+        });
+
+        districtSelect.addEventListener('change', function() {
+            const selectedState = stateSelect.value;
+            const selectedDistrict = this.value;
+            citySelect.innerHTML = '<option value="">Select city</option>';
+            
+            if (selectedState && selectedDistrict && locationData[selectedState][selectedDistrict]) {
+                locationData[selectedState][selectedDistrict].forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city.toLowerCase().replace(' ', '-');
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        });
+
+        // Form submission
+        document.getElementById('inputForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your input! Your submission has been recorded.');
+            this.reset();
+        });
+
+        // Chart.js Charts
+        // Bar Chart - Inputs by State
+        const stateCtx = document.getElementById('stateChart').getContext('2d');
+        new Chart(stateCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Maharashtra', 'Kerala', 'Delhi', 'Karnataka', 'Tamil Nadu'],
+                datasets: [{
+                    label: 'Number of Inputs',
+                    data: [45, 30, 20, 25, 15],
+                    backgroundColor: '#0B3D91',
+                    borderColor: '#083071',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Pie Chart - Input Type Distribution
+        const typeCtx = document.getElementById('typeChart').getContext('2d');
+        new Chart(typeCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Problem', 'Suggestion', 'Success Story'],
+                datasets: [{
+                    data: [60, 30, 10],
+                    backgroundColor: ['#0B3D91', '#FFB703', '#138808'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
